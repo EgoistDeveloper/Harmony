@@ -1,0 +1,33 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:pages="clr-namespace:Harmony.UI.Pages">
+
+    <!-- Libray Item DataTemplate -->
+    <DataTemplate x:Key="LibraryItemDataTemplate">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}, Path=ActualWidth}"
+                    Style="{StaticResource ContentButtonStyle}"
+                    Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
+                <Grid>
+                    <TextBlock Text="{Binding Library.FolderPath}"
+                               TextAlignment="Left"
+                               Cursor="Hand"/>
+                </Grid>
+            </Button>
+
+            <Button Grid.Column="1"
+                    Tag="{Binding Source={StaticResource Reload}}"
+                    Style="{StaticResource Icon2xButtonStyle}"
+                    Command="{Binding DataContext.ReScanFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
+                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                    Margin="10"/>
+        </Grid>
+    </DataTemplate>
+    
+</ResourceDictionary>

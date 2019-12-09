@@ -1,0 +1,71 @@
+﻿<dialog:DialogWindow x:Class="Harmony.Dialogs.Playlist.AddPlaylistDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialog="clr-namespace:Harmony.Dialogs"
+        xmlns:local="clr-namespace:Harmony.Dialogs.Playlist"
+        mc:Ignorable="d"
+        DataContext="{x:Null}">
+
+    <Window.Resources>
+        <Style TargetType="{x:Type local:AddPlaylistDialog}" BasedOn="{StaticResource BasicWindowBaseStyle}"/>
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="{Binding ResizeBorderThickness}"
+                      CaptionHeight="{Binding TitleHeight}"
+                      CornerRadius="0" GlassFrameThickness="0"/>
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Image Source="{Binding Playlist.Image}" 
+                   Margin="10"
+                   Height="400" Width="400"
+                   Stretch="Uniform"/>
+
+            <Button Grid.Row="1"
+                    Margin="10" Width="Auto"
+                    Content="Add Image" 
+                    HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center"
+                    Tag="{Binding Source={StaticResource Plus}, Path=Data}"
+                    Command="{Binding AddImageCommand}"/>
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel VerticalAlignment="Top">
+                <TextBox Text="{Binding Playlist.Title}" 
+                         Tag="Title" 
+                         Margin="5"/>
+                <TextBox Margin="5" Height="100"
+                         Text="{Binding Playlist.Description}" 
+                         Tag="Description"
+                         TextWrapping="Wrap"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+
+</dialog:DialogWindow>

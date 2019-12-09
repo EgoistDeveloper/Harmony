@@ -1,0 +1,39 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                    xmlns:conterters="clr-namespace:Harmony.UI.Converters">
+
+    <conterters:MultipleParametersConverter x:Key="MultipleParametersConverter"/>
+    
+    <!-- Playlist Item Template -->
+    <DataTemplate x:Key="PlaylistItemTemplate">
+        <Button Content="{Binding Title, FallbackValue='Playlist Title'}"
+                Style="{StaticResource PlaylistButton}"/>
+    </DataTemplate>
+
+    <!-- Playlist Group Item Template -->
+    <DataTemplate x:Key="PlaylistGroupItemTemplate">
+        <Expander Width="250" 
+                  Margin="10 0 0 0"
+                  Header="{Binding PlaylistGroup.Title, FallbackValue='Playlist Group Title'}"
+                  IsExpanded="{Binding IsExpanded}"
+                  Style="{StaticResource ListItemExpanderStyle}">
+            <ListView ItemTemplate="{StaticResource PlaylistItemTemplate}" 
+                      ItemsSource="{Binding Playlists}"
+                      Tag="There is no playlist"/>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Expanded">
+                    <i:InvokeCommandAction Command="{Binding PlaylistGroupItemExpandedCommand}">
+                        <i:InvokeCommandAction.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultipleParametersConverter}">
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}"/>
+                                <Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Expander}}"/>
+                            </MultiBinding>
+                        </i:InvokeCommandAction.CommandParameter>
+                    </i:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </Expander>
+    </DataTemplate>
+
+</ResourceDictionary>

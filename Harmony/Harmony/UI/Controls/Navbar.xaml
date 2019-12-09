@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="Harmony.UI.Controls.Navbar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="1009" d:DesignWidth="350"
+             DataContext="{Binding NavbarVM, Source={StaticResource Locator}}">
+    <UserControl.Template>
+        <ControlTemplate TargetType="UserControl">
+            <Border Background="{StaticResource BlueGrey900Brush}">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="10" Color="#000" Opacity=".2" ShadowDepth="5" Direction="0"/>
+                </Border.Effect>
+
+                <Grid Margin="30 50 30 30">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- App Title -->
+                    <TextBlock Text="Harmony"
+                               VerticalAlignment="Center"
+                               Foreground="{StaticResource Amber500Brush}"
+                               FontSize="35"
+                               FontWeight="Thin"
+                               Margin="50 0 0 0"/>
+
+                    <!-- Navigation And Playlist Groups -->
+                    <Grid Grid.Row="1" Margin="50 0 0 30">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Navigation Bar List -->
+                        <ListView ItemsSource="{Binding NavbarItems}"
+                                  ItemTemplate="{StaticResource NavbarItemDataTemplate}"
+                                  Style="{StaticResource LeftTitledListView}"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  VerticalAlignment="Top"
+                                  Tag="YOUR LIBRARY"/>
+
+                        <!-- Playlist Groups -->
+                        <ListView Grid.Row="1" 
+                                  ItemsSource="{Binding PlaylistGroupItems}"
+                                  ItemTemplate="{StaticResource PlaylistGroupItemTemplate}"
+                                  Style="{StaticResource LeftTitledListView}"
+                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                  VerticalAlignment="Top"
+                                  Tag="PLAYLISTS"/>
+                    </Grid>
+
+                    <!-- Add Playlist Gro -->
+                    <Button Grid.Row="2" 
+                            Height="40"
+                            Padding="20 10"
+                            Width="200"
+                            Content="ADD PLAYLIST GROUP"
+                            Tag="{Binding Source={StaticResource Plus}, Path=Data}"
+                            Command="{Binding AddPlaylistGroupCommand}"/>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </UserControl.Template>
+
+</UserControl>

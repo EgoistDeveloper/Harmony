@@ -1,0 +1,43 @@
+﻿<local:BasePage x:Class="Harmony.UI.Pages.Importer"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Harmony.UI.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      DataContext="{Binding ImporterVM, Source={StaticResource Locator}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <!-- Library List -->
+        <ListView ItemsSource="{Binding LibraryItems}"
+                  Style="{StaticResource LeftTitledListView}"
+                  ItemTemplate="{StaticResource LibraryItemDataTemplate}"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  VerticalAlignment="Stretch"
+                  Tag="LIBRARIES"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="{Binding ProcessOutput, FallbackValue='Process output...'}"
+                       Margin="20 5"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"/>
+
+            <Button Grid.Column="1" 
+                    Tag="{Binding Source={StaticResource ProgressDownload}, Path=Data}"
+                    Content="Import"
+                    HorizontalAlignment="Right"
+                    Command="{Binding ImportFolderCommand}"/>
+        </Grid>
+    </Grid>
+</local:BasePage>
