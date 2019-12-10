@@ -96,7 +96,9 @@ namespace Harmony.Helpers
 
                     WaveOutEvent.Play();
                 }
-
+            }
+            else
+            {
                 System.Diagnostics.Debug.WriteLine("audio file not found");
             }
 

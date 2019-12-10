@@ -33,10 +33,10 @@ namespace Harmony.Helpers
                     return new Artists();
                 case ApplicationPage.Artist:
                     return new Artist();
-                //case ApplicationPage.Artists:
-                //    break;
-                //case ApplicationPage.Podcasts:
-                //    break;
+                case ApplicationPage.Playlist:
+                    return new Playlist();
+                case ApplicationPage.History:
+                    return new History();
                 default:
                     // Debugger.Break();
                     return new WelcomePage();

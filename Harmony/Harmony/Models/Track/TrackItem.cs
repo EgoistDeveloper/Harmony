@@ -1,7 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Media.Imaging;
 
 namespace Harmony.Models.Track
 {

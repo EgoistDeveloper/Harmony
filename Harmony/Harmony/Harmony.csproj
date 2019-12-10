@@ -256,6 +256,9 @@
     <Compile Include="Dialogs\Playlist\AddPlaylistGroupDialog.xaml.cs">
       <DependentUpon>AddPlaylistGroupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\Playlist\AddToPlaylistDialog.xaml.cs">
+      <DependentUpon>AddToPlaylistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DI\FrameworkConstructionExtensions.cs" />
     <Compile Include="DI\DI.cs" />
     <Compile Include="Helpers\ApplicationPageHelpers.cs" />
@@ -302,6 +305,7 @@
     <Compile Include="Models\Track\Entities\Plays.cs" />
     <Compile Include="Models\Track\Entities\Track.cs" />
     <Compile Include="Models\Track\Entities\TrackGenre.cs" />
+    <Compile Include="Models\Track\PlaysItem.cs" />
     <Compile Include="Models\Track\TrackItem.cs" />
     <Compile Include="UI\Animations\AnimationSlideInDirection.cs" />
     <Compile Include="UI\Animations\FrameworkElementAnimations.cs" />
@@ -316,6 +320,7 @@
     <Compile Include="UI\Converters\BooleanToBorderThicknessConverter.cs" />
     <Compile Include="UI\Converters\BoolToReverseVisibilityConverter.cs" />
     <Compile Include="UI\Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="UI\Converters\DateTimeToTimeAgoConverter.cs" />
     <Compile Include="UI\Converters\EnumToStringConverter.cs" />
     <Compile Include="UI\Converters\IntMinusConverter.cs" />
     <Compile Include="UI\Converters\IntToBoolConverter.cs" />
@@ -333,6 +338,7 @@
     <Compile Include="UI\Converters\SubstringConverter.cs" />
     <Compile Include="UI\Converters\ThisMonthUnderlineConverter.cs" />
     <Compile Include="UI\Converters\TimeSpanToTimeConverter.cs" />
+    <Compile Include="UI\Converters\UpperCaseWordsConverter.cs" />
     <Compile Include="UI\Pages\Album.xaml.cs">
       <DependentUpon>Album.xaml</DependentUpon>
     </Compile>
@@ -349,8 +355,14 @@
     <Compile Include="UI\Pages\Base\PageHost.xaml.cs">
       <DependentUpon>PageHost.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\History.xaml.cs">
+      <DependentUpon>History.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\Importer.xaml.cs">
       <DependentUpon>Importer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\Playlist.xaml.cs">
+      <DependentUpon>Playlist.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\Pages\Tracks.xaml.cs">
       <DependentUpon>Tracks.xaml</DependentUpon>
@@ -373,10 +385,14 @@
     <Compile Include="ViewModel\Player\ImporterViewModel.cs" />
     <Compile Include="ViewModel\Playlist\AddPlaylistGroupViewModel.cs" />
     <Compile Include="ViewModel\Playlist\AddPlaylistViewModel.cs" />
+    <Compile Include="ViewModel\Playlist\AddToPlaylistViewModel.cs" />
+    <Compile Include="ViewModel\Playlist\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\Track\ArtistViewModel.cs" />
     <Compile Include="ViewModel\Track\ArtistsViewModel.cs" />
     <Compile Include="ViewModel\Track\AlbumViewModel.cs" />
     <Compile Include="ViewModel\Track\AlbumsViewModel.cs" />
+    <Compile Include="ViewModel\Track\HistoryViewModel.cs" />
+    <Compile Include="ViewModel\Track\PlaysViewModel.cs" />
     <Compile Include="ViewModel\Track\TracksViewModel.cs" />
     <Page Include="Dialogs\DeleteDialog.xaml">
       <SubType>Designer</SubType>
@@ -391,6 +407,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Playlist\AddPlaylistGroupDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Playlist\AddToPlaylistDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -466,7 +486,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Pages\History.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\Pages\Importer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\Playlist.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

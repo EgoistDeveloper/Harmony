@@ -1,20 +1,16 @@
-﻿<local:BasePage x:Class="Harmony.UI.Pages.Album"
+﻿<local:BasePage x:Class="Harmony.UI.Pages.Playlist"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:viewmodel="clr-namespace:Harmony.ViewModel.Track"
-      xmlns:locator="clr-namespace:Harmony.ViewModel.Base"
       xmlns:local="clr-namespace:Harmony.UI.Pages"
-      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-      xmlns:pages="clr-namespace:Harmony.UI.Pages"
+      xmlns:locator="clr-namespace:Harmony.ViewModel.Base"
       mc:Ignorable="d" 
-      d:DesignHeight="650" d:DesignWidth="1000"
-      DataContext="{Binding AlbumVM, Source={StaticResource Locator}}">
+      d:DesignHeight="450" d:DesignWidth="800"
+      DataContext="{Binding PlaylistVM, Source={StaticResource Locator}}">
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
@@ -26,13 +22,14 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Album Title -->
-            <TextBlock Text="{Binding ApplicationViewModel.SelectedAlbumItem.Album.Title,
+            <!-- Playlist Title -->
+            <TextBlock Text="{Binding ApplicationViewModel.SelectedPlaylist.Title,
                               Source={x:Static locator:ViewModelLocator.Instance}}"
                        FontWeight="Bold"/>
 
             <!-- Album Image -->
-            <Border Grid.Row="1">
+            <Border Grid.Row="1"
+                    Background="{StaticResource BlueGrey900Brush}">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" Color="#000" Opacity=".2" ShadowDepth="5" Direction="0"/>
                 </Border.Effect>
@@ -41,29 +38,20 @@
                        Width="400"
                        Stretch="Uniform"
                        VerticalAlignment="Top"
-                       Source="{Binding ApplicationViewModel.SelectedAlbumItem.Album.Image,
+                       Source="{Binding ApplicationViewModel.SelectedPlaylist
+                    ...Image,
                                 Source={x:Static locator:ViewModelLocator.Instance}}"/>
             </Border>
         </Grid>
 
-        <!-- Artists List -->
-        <ListView Grid.Column="1" 
-                  Margin="30 0 0 0"
-                  ItemsSource="{Binding ApplicationViewModel.SelectedAlbumItem.Artists,
-                                Source={x:Static locator:ViewModelLocator.Instance}}"
-                  Style="{StaticResource LeftTitledListView}"
-                  ItemTemplate="{StaticResource AlbumArtistsDataTemplate}"
-                  VerticalAlignment="Top"
-                  Tag="ARTISTS"/>
-
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!-- Tracks List -->
             <ListView Margin="20 0 0 0"
-                      ItemsSource="{Binding ApplicationViewModel.SelectedAlbumItem.TrackItems,
+                      ItemsSource="{Binding ApplicationViewModel.SelectedPlaylistTrackItems,
                                     Source={x:Static locator:ViewModelLocator.Instance}}"
                       Style="{StaticResource LeftTitledListView}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"

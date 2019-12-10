@@ -8,6 +8,12 @@ namespace Harmony.Models.Track
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public Plays()
+        {
+            AddedDate = DateTime.Now.Date;
+            PlayCount = 1;
+        }
+
         public long Id { get; set; }
         [Required]
         public DateTime AddedDate { get; set; }

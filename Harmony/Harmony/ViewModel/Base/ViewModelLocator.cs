@@ -17,6 +17,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Harmony.ViewModel.App;
 using Harmony.ViewModel.Player;
+using Harmony.ViewModel.Playlist;
 using Harmony.ViewModel.Track;
 using static Harmony.DI.DI;
 //using Microsoft.Practices.ServiceLocation;
@@ -48,6 +49,8 @@ namespace Harmony.ViewModel.Base
                 SimpleIoc.Default.Register<ArtistsViewModel>();
                 SimpleIoc.Default.Register<ArtistViewModel>();
                 SimpleIoc.Default.Register<TracksViewModel>();
+                SimpleIoc.Default.Register<PlaylistViewModel>();
+                SimpleIoc.Default.Register<HistoryViewModel>();
 
             }
         }
@@ -122,6 +125,21 @@ namespace Harmony.ViewModel.Base
             }
         }
 
+        public PlaylistViewModel PlaylistVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<PlaylistViewModel>();
+            }
+        }
+
+        public HistoryViewModel HistoryVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<HistoryViewModel>();
+            }
+        }
 
         public static void Cleanup()
         {

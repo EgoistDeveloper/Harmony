@@ -30,7 +30,7 @@
                 <Image Width="50"
                        Height="50"
                        Stretch="Uniform"
-                       Source="{Binding CurrentlySelectedTrack.Track.Image}"/>
+                       Source="{Binding SelectedTrackItem.Track.Image}"/>
 
                 <!-- Track -->
                 <Grid Grid.Column="1">
@@ -41,12 +41,14 @@
 
                     <Button Tag="{Binding Source={StaticResource PlaylistPlus}, Path=Data}"
                             Style="{StaticResource Icon2xButtonStyle}"
-                            Command="{Binding AddToPlaylistCommand}"/>
+                            Command="{Binding AddToPlaylistCommand}"
+                            IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"
+                            ToolTip="Add To Playlist"/>
 
                     <TextBlock Grid.Column="1" 
                                Margin="10" 
                                VerticalAlignment="Center" 
-                               Text="{Binding CurrentlySelectedTrack.Track.Title}"
+                               Text="{Binding SelectedTrackItem.Track.Title}"
                                TextWrapping="Wrap"/>
                 </Grid>
             </Grid>
@@ -61,8 +63,8 @@
                 <!-- Player Controls -->
                 <Grid HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="70"/>
                     </Grid.ColumnDefinitions>
 
                     <!-- Playback Controls -->
@@ -80,16 +82,18 @@
                                 Style="{StaticResource Icon2xButtonStyle}"
                                 Margin="20 0"
                                 VerticalAlignment="Center"
-                                IsEnabled="{Binding CurrentlySelectedTrack, Converter={StaticResource NullToBoolConverter}}"/>
+                                IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"
+                                ToolTip="Skip Backward"/>
                         <!-- Play Pause Button -->
                         <ToggleButton Grid.Column="1" 
                                       Tag="{Binding Source={StaticResource Play}, Path=Data}"
                                       Command="{Binding StartPlaybackCommand}"
                                       Style="{StaticResource PlayPauseToggleButtonStyle}"
                                       Margin="20 5"
-                                      IsChecked="{Binding CurrentlySelectedTrack.IsPlaying}"
+                                      IsChecked="{Binding SelectedTrackItem.IsPlaying}"
                                       VerticalAlignment="Center"
-                                      IsEnabled="{Binding CurrentlySelectedTrack, Converter={StaticResource NullToBoolConverter}}"/>
+                                      IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"
+                                      ToolTip="Play/Pause"/>
                         <!-- Skip Forward Button -->
                         <Button Grid.Column="2" 
                                 Tag="{Binding Source={StaticResource SkipForward}, Path=Data}"
@@ -97,7 +101,8 @@
                                 Style="{StaticResource Icon2xButtonStyle}"
                                 Margin="20 5"
                                 VerticalAlignment="Center"
-                                IsEnabled="{Binding CurrentlySelectedTrack, Converter={StaticResource NullToBoolConverter}}"/>
+                                IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"
+                                ToolTip="Skip Forward"/>
                     </Grid>
 
                     <!-- Repeat Conrtols -->
@@ -109,20 +114,19 @@
 
                         <Path Data="{Binding RepeatType, Converter={StaticResource RepeatTypeToIconConverter}}"/>
                         <!-- Skip Backward Button -->
-                        <Button Grid.Column="1" 
-                                Tag="{Binding RepeatType, Converter={StaticResource RepeatTypeToIconConverter}}"
-                                Command="{Binding RewindToStartCommand}"
+                        <Button Tag="{Binding RepeatType, Converter={StaticResource RepeatTypeToIconConverter}}"
+                                Command="{Binding ChangeRepeatTypeCommand}"
                                 Style="{StaticResource Icon2xButtonStyle}"
-                                Margin="20 0"
+                                Margin="5"
                                 VerticalAlignment="Center"
-                                IsEnabled="{Binding CurrentlySelectedTrack, Converter={StaticResource NullToBoolConverter}}"/>
+                                IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"/>
                         <Button Grid.Column="1" 
                                 Tag="{Binding Source={StaticResource ShuffleVariant}, Path=Data}"
                                 Command="{Binding ForwardToEndCommand}"
                                 Style="{StaticResource Icon2xButtonStyle}"
-                                Margin="20 5"
+                                Margin="5"
                                 VerticalAlignment="Center"
-                                IsEnabled="{Binding CurrentlySelectedTrack, Converter={StaticResource NullToBoolConverter}}"/>
+                                IsEnabled="{Binding SelectedTrackItem, Converter={StaticResource NullToBoolConverter}}"/>
                     </Grid>
 
                 </Grid>

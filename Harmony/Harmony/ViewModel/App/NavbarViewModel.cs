@@ -11,6 +11,7 @@ using Harmony.Dialogs.Playlist;
 using Harmony.Helpers;
 using Harmony.Models.Common;
 using Harmony.Models.Playlist;
+using Harmony.Models.Track;
 using Harmony.ViewModel.Playlist;
 using static Harmony.DI.DI;
 
@@ -58,6 +59,7 @@ namespace Harmony.ViewModel.App
             GoToCommand = new RelayParameterizedCommand(GoTo);
             AddPlaylistGroupCommand = new RelayCommand(p => AddPlaylistGroup());
 
+            GoToPlaylistCommand = new RelayParameterizedCommand(GoToPlaylist);
             LoadPlaylistGroups();
         }
 
@@ -66,6 +68,8 @@ namespace Harmony.ViewModel.App
         public ICommand AddPlaylistGroupCommand { get; set; }
 
         public ICommand GoToCommand { get; set; }
+
+        public ICommand GoToPlaylistCommand { get; set; }
 
         #endregion
 
@@ -183,6 +187,29 @@ namespace Harmony.ViewModel.App
                         playlistGroupItem.IsExpanded = false;
                 }
             }
+        }
+
+        public void GoToPlaylist(object sender)
+        {
+            var playlist = ((Button)sender).DataContext as Models.Playlist.Playlist;
+
+            using var db = new AppDbContext();
+
+            ViewModelApplication.SelectedPlaylist = playlist;
+
+            var playlistTracks = db.PlaylistTracks.Where(x => x.PlaylistId == playlist.Id).ToObservableCollection();
+
+            ViewModelApplication.SelectedPlaylistTrackItems = new ObservableCollection<TrackItem>();
+
+            foreach (var playlistTrack in playlistTracks)
+            {
+                ViewModelApplication.SelectedPlaylistTrackItems.Add(new TrackItem 
+                {
+                    Track = db.Tracks.First(x => x.Id == playlistTrack.TrackId)
+                });
+            }
+
+            ViewModelApplication.GoToPage(ApplicationPage.Playlist);
         }
 
         #endregion

@@ -11,7 +11,8 @@
         Album = 7,
         Artists = 8,
         Artist = 9,
-        Podcasts = 10,
-        Importer = 11
+        Playlist = 10,
+        Podcasts = 11,
+        Importer = 12
     }
 }

@@ -25,6 +25,8 @@
             <converters:TimeSpanToTimeConverter x:Key="TimeSpanToTimeConverter"/>
             <converters:NullToBoolConverter x:Key="NullToBoolConverter"/>
             <converters:RepeatTypeToIconConverter x:Key="RepeatTypeToIconConverter"/>
+            <converters:DateTimeToTimeAgoConverter x:Key="DateTimeToTimeAgoConverter"/>
+            <converters:UpperCaseWordsConverter x:Key="UpperCaseWordsConverter"/>
 
 
             <!-- Resource Dictionaries -->

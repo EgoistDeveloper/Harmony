@@ -1,10 +1,12 @@
 ﻿using GalaSoft.MvvmLight;
 using Harmony.Data;
+using Harmony.Dialogs.Playlist;
 using Harmony.Helpers;
 using Harmony.Models.Common;
 using Harmony.Models.Player;
 using Harmony.Models.Player.Enums;
 using Harmony.Models.Track;
+using Harmony.ViewModel.Playlist;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.ObjectModel;
@@ -35,7 +37,7 @@ namespace Harmony.ViewModel.App
 
             NAudioPlayer = new NAudioPlayer();
 
-            NAudioPlayer.PlaybackPaused += _audioPlayer_PlaybackPaused;
+            NAudioPlayer.PlaybackPaused += NAudioPlayer_PlaybackPaused;
             NAudioPlayer.PlaybackResumed += NAudioPlayer_PlaybackResumed;
             NAudioPlayer.PlaybackStopped += NAudioPlayer_PlaybackStopped;
 
@@ -56,11 +58,6 @@ namespace Harmony.ViewModel.App
 
             #endregion
 
-            // Menu commands
-            AddFileToPlaylistCommand = new RelayCommand(AddFileToPlaylist, CanAddFileToPlaylist);
-            AddFolderToPlaylistCommand = new RelayCommand(AddFolderToPlaylist, CanAddFolderToPlaylist);
-            SavePlaylistCommand = new RelayCommand(SavePlaylist, CanSavePlaylist);
-            LoadPlaylistCommand = new RelayCommand(LoadPlaylist, CanLoadPlaylist);
 
             #region Player commands
 
@@ -68,13 +65,14 @@ namespace Harmony.ViewModel.App
             PlayTrackItemCommand = new RelayParameterizedCommand(PlayTrackItem);
             RewindToStartCommand = new RelayCommand(p => RewindToStart());
             ForwardToEndCommand = new RelayCommand(p => ForwardToEnd());
+            ChangeRepeatTypeCommand = new RelayCommand(p => ChangeRepeatType());
 
             VolumeChangedCommand = new RelayCommand(p => VolumeChanged());
             PositionChangedCommand = new RelayParameterizedCommand(PositionChanged);
+            ValueChangedCommand = new RelayParameterizedCommand(ValueChanged);
 
+            AddToPlaylistCommand = new RelayCommand(p => AddToPlaylist());
             #endregion
-
-            ShuffleCommand = new RelayCommand(Shuffle, CanShuffle);
         }
 
         #region Commands
@@ -90,9 +88,11 @@ namespace Harmony.ViewModel.App
         public ICommand StartPlaybackCommand { get; set; }
         public ICommand RewindToStartCommand { get; set; }
         public ICommand ForwardToEndCommand { get; set; }
+        public ICommand ChangeRepeatTypeCommand { get; set; }
 
         public ICommand VolumeChangedCommand { get; set; }
         public ICommand PositionChangedCommand { get; set; }
+        public ICommand ValueChangedCommand { get; set; }
 
         public ICommand AddToPlaylistCommand { get; set; }
 
@@ -130,9 +130,9 @@ namespace Harmony.ViewModel.App
 
         public double CurrentTrackLength { get; set; }
 
-        public RepeatType Repeat { get; set; } = RepeatType.Repeat; // todo: load from db
+        public RepeatType RepeatType { get; set; } = RepeatType.RepeatOnce; // todo: load from db
 
-        public TimeSpan TrackPlayTime { get; set; }
+        public TimeSpan TrackPlaybackTime { get; set; }
         #endregion
 
         #region Volume
@@ -158,8 +158,10 @@ namespace Harmony.ViewModel.App
         public ObservableCollection<AlbumItem> AlbumItems { get; set; } = new ObservableCollection<AlbumItem>();
         public AlbumItem SelectedAlbumItem { get; set; }
 
-        public TrackItem CurrentlySelectedTrack { get; set; }
+        public TrackItem SelectedTrackItem { get; set; }
         public ObservableCollection<TrackItem> PlaylistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
+        public ObservableCollection<TrackItem> SelectedPlaylistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
+        public Models.Playlist.Playlist SelectedPlaylist { get; set; }
 
         public ObservableCollection<TrackItem> ArtistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
         public ArtistItem SelectedArtistItem { get; set; }
@@ -196,6 +198,34 @@ namespace Harmony.ViewModel.App
         }
         #endregion
 
+        public void SavePlayCount()
+        {
+            using var db = new AppDbContext();
+
+            var play = db.Plays.FirstOrDefault(x => x.AddedDate == DateTime.Now.Date && x.TrackId == SelectedTrackItem.Track.Id);
+            if (play != null)
+            {
+                play.PlayCount += 1;
+                db.Plays.Update(play);
+            }
+            else
+            {
+                play = new Plays
+                {
+                    TrackId = SelectedTrackItem.Track.Id
+                };
+
+                db.Plays.Add(play);
+            }
+
+            db.SaveChanges();
+        }
+
+        public void CheckDailyMix()
+        {
+
+        }
+
         #endregion
 
         #region Command Methods
@@ -223,14 +253,14 @@ namespace Harmony.ViewModel.App
         /// <param name="sender"></param>
         public void StartPlayback(object sender)
         {
-            if (CurrentlySelectedTrack != null)
+            if (SelectedTrackItem != null)
             {
                 if (NAudioPlayer.WaveOutEvent.PlaybackState == NAudio.Wave.PlaybackState.Stopped)
                 {
                     PlayerTimer.Stop();
                 }
 
-                if (CurrentlySelectedTrack != null)
+                if (SelectedTrackItem != null)
                 {
                     CurrentTrackLength = NAudioPlayer.GetLengthInSeconds();
                     AudioLength = NAudioPlayer.GetLength();
@@ -249,7 +279,7 @@ namespace Harmony.ViewModel.App
         /// <returns></returns>
         public bool CanStartPlayback(object p)
         {
-            return CurrentlySelectedTrack != null;
+            return SelectedTrackItem != null;
         }
 
         /// <summary>
@@ -261,7 +291,7 @@ namespace Harmony.ViewModel.App
             {
                 if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
                 {
-                    PlayTrackItem(GetPreviousTrackItem(PlaylistTrackItems, CurrentlySelectedTrack));
+                    PlayTrackItem(GetPreviousTrackItem(PlaylistTrackItems, SelectedTrackItem));
                 }
             }
             else
@@ -279,7 +309,7 @@ namespace Harmony.ViewModel.App
             {
                 if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
                 {
-                    PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, CurrentlySelectedTrack));
+                    PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, SelectedTrackItem));
                 }
             }
             else
@@ -303,33 +333,45 @@ namespace Harmony.ViewModel.App
                 {
                     trackItem = _trackItem;
                 }
-                // get in list
+                // get in list item
                 else
                 {
-                    trackItem = (sender as ToggleButton).DataContext as TrackItem;
+                    var toggleButton = (sender as ToggleButton);
+
+                    if (toggleButton.DataContext is TrackItem _trackitem)
+                    {
+                        trackItem = _trackitem;
+                    }
+                    else if (toggleButton.DataContext is PlaysItem playsItem)
+                    {
+                        trackItem = new TrackItem 
+                        { 
+                            Track = playsItem.Track
+                        };
+                    }
                 }
 
                 // if there is track
                 if (trackItem.Track != null)
                 {
-                    if (CurrentlySelectedTrack == trackItem)
+                    if (SelectedTrackItem == trackItem)
                     {
                         NAudioPlayer.TogglePlayPause(CurrentVolume);
                     }
                     else
                     {
                         // if there is selected track set is playing false
-                        if (CurrentlySelectedTrack != null)
+                        if (SelectedTrackItem != null)
                         {
-                            CurrentlySelectedTrack.IsPlaying = false;
-                            CurrentlySelectedTrack = null;
+                            SelectedTrackItem.IsPlaying = false;
+                            SelectedTrackItem = null;
                         }
 
                         // dispose previous player/track
                         NAudioPlayer.Dispose();
 
                         // set new track and play
-                        CurrentlySelectedTrack = trackItem;
+                        SelectedTrackItem = trackItem;
                         NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume, trackItem.Track.FileLocation);
                         trackItem.IsPlaying = true;
 
@@ -346,6 +388,25 @@ namespace Harmony.ViewModel.App
         }
 
         /// <summary>
+        /// Set repeat type
+        /// </summary>
+        public void ChangeRepeatType()
+        {
+            if (RepeatType == RepeatType.Repeat)
+            {
+                RepeatType = RepeatType.RepeatOnce;
+            }
+            else if (RepeatType == RepeatType.RepeatOnce)
+            {
+                RepeatType = RepeatType.RepeatOff;
+            }
+            else if (RepeatType == RepeatType.RepeatOff)
+            {
+                RepeatType = RepeatType.Repeat;
+            }
+        }
+
+        /// <summary>
         /// Set new position
         /// </summary>
         /// <param name="sender"></param>
@@ -356,82 +417,38 @@ namespace Harmony.ViewModel.App
             NAudioPlayer.SetPosition(slider.Value);
         }
 
+        public void ValueChanged(object sender)
+        {
+            AudioPosition = NAudioPlayer.GetPosition();
+            AudioPositionInSeconds = NAudioPlayer.GetPositionInSeconds();
+            AudioRemaining = NAudioPlayer.GetRemaining();
+        }
+
         /// <summary>
         /// Set volume
         /// </summary>
         public void VolumeChanged()
         {
-            if (CurrentlySelectedTrack != null)
+            if (SelectedTrackItem != null)
             {
                 NAudioPlayer.SetVolume(CurrentVolume);
             }
         }
 
+        /// <summary>
+        /// Add to playlist
+        /// </summary>
+        public void AddToPlaylist()
+        {
+            var dialog = new AddToPlaylistDialog();
+
+            dialog.ShowDialogWindow(new AddToPlaylistViewModel(dialog, SelectedTrackItem.Track));
+        }
+
         #endregion
 
         #endregion
 
-
-        public ICommand AddFileToPlaylistCommand { get; set; }
-        public ICommand AddFolderToPlaylistCommand { get; set; }
-        public ICommand SavePlaylistCommand { get; set; }
-        public ICommand LoadPlaylistCommand { get; set; }
-        public ICommand ShuffleCommand { get; set; }
-
-        private void AddFileToPlaylist(object p)
-        {
-
-        }
-        private bool CanAddFileToPlaylist(object p)
-        {
-            return true;
-        }
-
-        private void AddFolderToPlaylist(object p)
-        {
-
-        }
-
-        private bool CanAddFolderToPlaylist(object p)
-        {
-            return true;
-        }
-
-        private void SavePlaylist(object p)
-        {
-
-        }
-
-        private bool CanSavePlaylist(object p)
-        {
-            return true;
-        }
-
-        private void LoadPlaylist(object p)
-        {
-
-        }
-
-        private bool CanLoadPlaylist(object p)
-        {
-            return true;
-        }
-
-
-
-
-
-
-
-
-        private void Shuffle(object p)
-        {
-
-        }
-        private bool CanShuffle(object p)
-        {
-            return true;
-        }
 
         #region Event Methods
 
@@ -445,6 +462,33 @@ namespace Harmony.ViewModel.App
             AudioPosition = NAudioPlayer.GetPosition();
             AudioPositionInSeconds = NAudioPlayer.GetPositionInSeconds();
             AudioRemaining = NAudioPlayer.GetRemaining();
+
+            if (AudioLength == AudioPosition)
+            {
+                SavePlayCount();
+
+                // if playlist is not null play next
+                if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
+                {
+                    if (RepeatType == RepeatType.RepeatOnce)
+                    {
+                        NAudioPlayer.SetPosition(0);
+                        NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume);
+                    }
+                    else
+                    {
+                        PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, SelectedTrackItem));
+                    }
+                }
+                else if (SelectedTrackItem != null)
+                {
+                    if (RepeatType == RepeatType.RepeatOnce)
+                    {
+                        NAudioPlayer.SetPosition(0);
+                        NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -455,7 +499,21 @@ namespace Harmony.ViewModel.App
             // if playlist is not null play next
             if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
             {
-                PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, CurrentlySelectedTrack));
+                if (RepeatType == RepeatType.RepeatOnce)
+                {
+                    StartPlayback(null);
+                }
+                else
+                {
+                    PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, SelectedTrackItem));
+                }
+            }
+            else if (SelectedTrackItem != null)
+            {
+                if (RepeatType == RepeatType.RepeatOnce)
+                {
+                    StartPlayback(null);
+                }
             }
         }
 
