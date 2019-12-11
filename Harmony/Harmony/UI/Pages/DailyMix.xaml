@@ -1,0 +1,84 @@
+﻿<local:BasePage x:Class="Harmony.UI.Pages.DailyMix"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Harmony.UI.Pages" 
+      xmlns:system="clr-namespace:System;assembly=mscorlib" 
+      xmlns:locator="clr-namespace:Harmony.ViewModel.Base"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      DataContext="{Binding DailyMixVM, Source={StaticResource Locator}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Tracks List -->
+        <ListView Margin="20 0 0 0"
+                  ItemsSource="{Binding ApplicationViewModel.SelectedPlaylistTrackItems,
+                                Source={x:Static locator:ViewModelLocator.Instance}}"
+                  Style="{StaticResource LeftTitledListView}"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                  VerticalAlignment="Top"
+                  Tag="{Binding ApplicationViewModel.SelectedDailyMix.AddedDate,
+                        Source={x:Static locator:ViewModelLocator.Instance}}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border Height="35" 
+                                Margin="0 5"
+                                Padding="20 0"
+                                Background="{StaticResource BlueGrey900Brush}"
+                                Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}, Path=ActualWidth,
+                                        Converter={StaticResource IntMinusConverter}, ConverterParameter=10}">
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock FontWeight="Bold"
+                                           Text="{Binding Order, StringFormat={}# {0}}"/>
+                            <!-- Play Button -->
+                            <ToggleButton Grid.Column="1" 
+                                              Tag="{Binding Source={StaticResource Play}, Path=Data}"
+                                              Command="{Binding ApplicationViewModel.PlayTrackItemCommand,
+                                                        Source={x:Static locator:ViewModelLocator.Instance}}"
+                                              CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                                              Style="{StaticResource PlayPauseToggleButtonStyle}"
+                                              Margin="5 0"
+                                              IsChecked="{Binding IsPlaying}"
+                                              VerticalAlignment="Center">
+                            </ToggleButton>
+                            <TextBlock Grid.Column="2" 
+                                           Text="{Binding Track.Title}"
+                                           FontWeight="Thin"/>
+                            <TextBlock Grid.Column="2"
+                                           Text="{Binding Album.Title}"
+                                           FontWeight="Thin"/>
+                            <TextBlock Grid.Column="3" 
+                                           Text="{Binding Track.Time, Converter={StaticResource TimeSpanToTimeConverter}}"
+                                           FontWeight="Bold"/>
+                            <!-- todo: add some useful buttons etc -->
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- Play All Album -->
+        <Button Grid.Row="1" 
+                    Height="40"
+                    Padding="20 0"
+                    Margin="10 23"
+                    Width="200"
+                    Content="PLAY AS PLAYLIST"
+                    HorizontalAlignment="Right"
+                    Tag="{Binding Source={StaticResource PlaylistPlay}, Path=Data}"
+                    Command="{Binding PlayAsPlaylistCommand}"/>
+
+    </Grid>
+</local:BasePage>

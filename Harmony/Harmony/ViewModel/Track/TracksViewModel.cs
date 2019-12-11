@@ -26,10 +26,8 @@ namespace Harmony.ViewModel.Track
 
         #region Commands
 
-        public ICommand GoToArtistCommand { get; set; }
         public ICommand PaginationChangedCommand { get; set; }
         public ICommand SearchChangedCommand { get; set; }
-
         public ICommand GoToListPageCommand { get; set; }
 
 

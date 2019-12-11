@@ -51,6 +51,8 @@ namespace Harmony.ViewModel.Base
                 SimpleIoc.Default.Register<TracksViewModel>();
                 SimpleIoc.Default.Register<PlaylistViewModel>();
                 SimpleIoc.Default.Register<HistoryViewModel>();
+                SimpleIoc.Default.Register<DailyMixesViewModel>();
+                SimpleIoc.Default.Register<DailyMixViewModel>();
 
             }
         }
@@ -140,6 +142,23 @@ namespace Harmony.ViewModel.Base
                 return ServiceLocator.Current.GetInstance<HistoryViewModel>();
             }
         }
+
+        public DailyMixesViewModel DailyMixesVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DailyMixesViewModel>();
+            }
+        }
+
+        public DailyMixViewModel DailyMixVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DailyMixViewModel>();
+            }
+        }
+
 
         public static void Cleanup()
         {

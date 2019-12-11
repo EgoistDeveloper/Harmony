@@ -9,6 +9,11 @@ namespace Harmony.Models.Playlist
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public DailyMix()
+        {
+            AddedDate = DateTime.Now.Date;
+        }
+
         public long Id { get; set; }
         [Required]
         public DateTime AddedDate { get; set; }

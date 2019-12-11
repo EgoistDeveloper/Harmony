@@ -37,6 +37,10 @@ namespace Harmony.Helpers
                     return new Playlist();
                 case ApplicationPage.History:
                     return new History();
+                case ApplicationPage.DailyMixes:
+                    return new DailyMixes();
+                case ApplicationPage.DailyMix:
+                    return new DailyMix();
                 default:
                     // Debugger.Break();
                     return new WelcomePage();

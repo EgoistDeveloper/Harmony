@@ -4,15 +4,16 @@
     {
         WelcomePage = 1,
         Home = 2,
-        DialyMix = 3,
-        History = 4,
-        Tracks = 5,
-        Albums = 6,
-        Album = 7,
-        Artists = 8,
-        Artist = 9,
-        Playlist = 10,
-        Podcasts = 11,
-        Importer = 12
+        DailyMixes = 3,
+        DailyMix = 4,
+        History = 5,
+        Tracks = 6,
+        Albums = 7,
+        Album = 8,
+        Artists = 9,
+        Artist = 10,
+        Playlist = 11,
+        Podcasts = 12,
+        Importer = 13
     }
 }

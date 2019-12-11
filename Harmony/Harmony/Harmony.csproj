@@ -355,6 +355,12 @@
     <Compile Include="UI\Pages\Base\PageHost.xaml.cs">
       <DependentUpon>PageHost.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\Pages\DailyMix.xaml.cs">
+      <DependentUpon>DailyMix.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Pages\DailyMixes.xaml.cs">
+      <DependentUpon>DailyMixes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\Pages\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>
     </Compile>
@@ -386,6 +392,8 @@
     <Compile Include="ViewModel\Playlist\AddPlaylistGroupViewModel.cs" />
     <Compile Include="ViewModel\Playlist\AddPlaylistViewModel.cs" />
     <Compile Include="ViewModel\Playlist\AddToPlaylistViewModel.cs" />
+    <Compile Include="ViewModel\Playlist\DailyMixesViewModel.cs" />
+    <Compile Include="ViewModel\Playlist\DailyMixViewModel.cs" />
     <Compile Include="ViewModel\Playlist\PlaylistViewModel.cs" />
     <Compile Include="ViewModel\Track\ArtistViewModel.cs" />
     <Compile Include="ViewModel\Track\ArtistsViewModel.cs" />
@@ -483,6 +491,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Pages\Base\PageHost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\DailyMix.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Pages\DailyMixes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

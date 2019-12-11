@@ -26,7 +26,7 @@ namespace Harmony.ViewModel.App
             {
                 new NavbarItem()
                 {
-                    ApplicationPage = ApplicationPage.DialyMix,
+                    ApplicationPage = ApplicationPage.DailyMixes,
                     IconData = (System.Windows.Application.Current.FindResource("CurrentAc") as Path)?.Data
                 },
                 new NavbarItem()

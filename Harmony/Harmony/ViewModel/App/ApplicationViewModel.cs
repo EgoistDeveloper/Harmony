@@ -9,6 +9,7 @@ using Harmony.Models.Track;
 using Harmony.ViewModel.Playlist;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -73,6 +74,8 @@ namespace Harmony.ViewModel.App
 
             AddToPlaylistCommand = new RelayCommand(p => AddToPlaylist());
             #endregion
+
+            CheckDailyMix();
         }
 
         #region Commands
@@ -133,6 +136,7 @@ namespace Harmony.ViewModel.App
         public RepeatType RepeatType { get; set; } = RepeatType.RepeatOnce; // todo: load from db
 
         public TimeSpan TrackPlaybackTime { get; set; }
+
         #endregion
 
         #region Volume
@@ -162,6 +166,7 @@ namespace Harmony.ViewModel.App
         public ObservableCollection<TrackItem> PlaylistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
         public ObservableCollection<TrackItem> SelectedPlaylistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
         public Models.Playlist.Playlist SelectedPlaylist { get; set; }
+        public Models.Playlist.DailyMix SelectedDailyMix { get; set; }
 
         public ObservableCollection<TrackItem> ArtistTrackItems { get; set; } = new ObservableCollection<TrackItem>();
         public ArtistItem SelectedArtistItem { get; set; }
@@ -223,7 +228,39 @@ namespace Harmony.ViewModel.App
 
         public void CheckDailyMix()
         {
+            using var db = new AppDbContext();
 
+            var tracksCount = db.Tracks.Count();
+
+            if (!db.DailyMixes.Any(x => x.AddedDate == DateTime.Now.Date) && tracksCount > 0)
+            {
+                var randomTracks = new List<Models.Track.Track>();
+
+                for (int i = 1; i < 101; i++)
+                {
+                    int skip = new Random().Next(i, tracksCount);
+
+                    randomTracks.Add(db.Tracks.Skip(skip).Take(1).First());
+                }
+
+                var dailyMix = new Models.Playlist.DailyMix();
+                db.DailyMixes.Add(dailyMix);
+
+                db.SaveChanges();
+
+                foreach (var randomTrack in randomTracks)
+                {
+                    var dailyTrack = new Models.Playlist.DailyMixTrack
+                    {
+                        DailyMixId = dailyMix.Id,
+                        TrackId = randomTrack.Id
+                    };
+
+                    db.DailyMixTracks.Add(dailyTrack);
+                }
+
+                db.SaveChanges();
+            }
         }
 
         #endregion

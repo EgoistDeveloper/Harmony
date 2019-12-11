@@ -95,7 +95,7 @@ namespace Harmony.Helpers
                     }
 
                     WaveOutEvent.Play();
-                }
+                } // todo: tell me file is not exists
             }
             else
             {
