@@ -4,30 +4,34 @@
 
     <!-- Libray Item DataTemplate -->
     <DataTemplate x:Key="LibraryItemDataTemplate">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+        <Border Background="{StaticResource BlueGrey900Brush}"
+                Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}, Path=ActualWidth}"
+                Padding="20 0"
+                Height="45">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <Button Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}, Path=ActualWidth}"
-                    Style="{StaticResource ContentButtonStyle}"
-                    Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-                <Grid>
+                <Button Style="{StaticResource ContentButtonStyle}"
+                        Command="{Binding DataContext.OpenFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                        HorizontalAlignment="Left"
+                        Width="Auto">
                     <TextBlock Text="{Binding Library.FolderPath}"
-                               TextAlignment="Left"
-                               Cursor="Hand"/>
-                </Grid>
-            </Button>
+                               Cursor="Hand"
+                               ToolTip="{Binding Library.FolderPath}"/>
+                </Button>
 
-            <Button Grid.Column="1"
-                    Tag="{Binding Source={StaticResource Reload}}"
-                    Style="{StaticResource Icon2xButtonStyle}"
-                    Command="{Binding DataContext.ReScanFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
-                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
-                    Margin="10"/>
-        </Grid>
+                <Button Grid.Column="1"
+                        Tag="{Binding Source={StaticResource Reload}, Path=Data}"
+                        Style="{StaticResource Icon2xButtonStyle}"
+                        Command="{Binding DataContext.ReScanFolderCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}" 
+                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                        ToolTip="Rescan this directory"/>
+            </Grid>
+        </Border>
     </DataTemplate>
     
 </ResourceDictionary>

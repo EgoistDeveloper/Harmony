@@ -54,6 +54,8 @@
                 <ResourceDictionary Source="pack://application:,,,/UI/Styles/ToolTipStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UI/Styles/ProgressBarStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UI/Styles/TextBlockStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ComboBoxStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/UI/Styles/ContextMenuStyles.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/UI/Styles/WindowStyles.xaml" />
 
                 <ResourceDictionary Source="pack://application:,,,/UI/DataTemplates/PlayerDataTemplates.xaml" />

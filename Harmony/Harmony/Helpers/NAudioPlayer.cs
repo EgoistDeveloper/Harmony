@@ -86,6 +86,7 @@ namespace Harmony.Helpers
                     if (WaveOutEvent == null)
                     {
                         WaveOutEvent = new WaveOutEvent();
+                        WaveOutEvent.PlaybackStopped += Output_PlaybackStopped;
                     }
 
                     if (!IsWaveOutEventInitalized)
@@ -95,16 +96,16 @@ namespace Harmony.Helpers
                     }
 
                     WaveOutEvent.Play();
-                } // todo: tell me file is not exists
+
+                    AudioFileReader.Volume = (float)volume;
+                    PlaybackResumed?.Invoke();
+                }
+                // todo: tell me file is not exists
             }
             else
             {
                 System.Diagnostics.Debug.WriteLine("audio file not found");
             }
-
-            AudioFileReader.Volume = (float)volume;
-
-            PlaybackResumed?.Invoke();
         }
 
         /// <summary>

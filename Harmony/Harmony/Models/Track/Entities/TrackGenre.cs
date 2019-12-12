@@ -9,5 +9,7 @@ namespace Harmony.Models.Track
         public long Id { get; set; }
         public long TrackId { get; set; }
         public long GenreId { get; set; }
+
+        public Genre Genre { get; set; }
     }
 }

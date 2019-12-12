@@ -38,8 +38,7 @@
                        Width="400"
                        Stretch="Uniform"
                        VerticalAlignment="Top"
-                       Source="{Binding ApplicationViewModel.SelectedPlaylist
-                    ...Image,
+                       Source="{Binding ApplicationViewModel.SelectedPlaylist.Image,
                                 Source={x:Static locator:ViewModelLocator.Instance}}"/>
             </Border>
         </Grid>
@@ -71,6 +70,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock FontWeight="Bold"
                                            Text="{Binding Order, StringFormat={}# {0}}"/>
@@ -94,6 +94,12 @@
                                 <TextBlock Grid.Column="3" 
                                            Text="{Binding Track.Time, Converter={StaticResource TimeSpanToTimeConverter}}"
                                            FontWeight="Bold"/>
+                                <Button Grid.Column="4" 
+                                        Margin="10 0 0 0"
+                                        Style="{StaticResource IconButtonStyle}"
+                                        Tag="{Binding Source={StaticResource Close}, Path=Data}"
+                                        Command="{Binding DataContext.RemovePlaylistItemCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
                                 <!-- todo: add some useful buttons etc -->
                             </Grid>
                         </Border>

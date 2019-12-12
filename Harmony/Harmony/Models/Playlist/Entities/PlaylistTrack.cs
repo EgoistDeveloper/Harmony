@@ -12,5 +12,6 @@ namespace Harmony.Models.Playlist
         public long PlaylistId { get; set; }
         [Required]
         public long TrackId { get; set; }
+        public Models.Track.Track Track { get; set; }
     }
 }

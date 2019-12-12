@@ -19,13 +19,9 @@
     </DataTemplate>
 
     <DataTemplate x:Key="PaginationItemDataTemplate">
-        <Button Style="{StaticResource ContentButtonStyle}"
+        <Button Style="{StaticResource PaginationButtonStyle}"
                 Command="{Binding DataContext.GoToListPageCommand, 
                           RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}"
-                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}">
-            <Button.Content>
-                <TextBlock Text="{Binding}"/>
-            </Button.Content>
-        </Button>
+                CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
     </DataTemplate>
 </ResourceDictionary>

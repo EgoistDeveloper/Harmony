@@ -20,7 +20,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using static Harmony.DI.DI;
 
-
 namespace Harmony.ViewModel.App
 {
     /// <summary>
@@ -75,7 +74,7 @@ namespace Harmony.ViewModel.App
             AddToPlaylistCommand = new RelayCommand(p => AddToPlaylist());
             #endregion
 
-            CheckDailyMix();
+            CheckoRCreateDailyMix();
         }
 
         #region Commands
@@ -203,6 +202,9 @@ namespace Harmony.ViewModel.App
         }
         #endregion
 
+        /// <summary>
+        /// Save play count for statistics
+        /// </summary>
         public void SavePlayCount()
         {
             using var db = new AppDbContext();
@@ -226,7 +228,10 @@ namespace Harmony.ViewModel.App
             db.SaveChanges();
         }
 
-        public void CheckDailyMix()
+        /// <summary>
+        /// Check and create daily mix when app starting
+        /// </summary>
+        public void CheckoRCreateDailyMix()
         {
             using var db = new AppDbContext();
 
@@ -452,6 +457,7 @@ namespace Harmony.ViewModel.App
             var slider = sender as Slider;
 
             NAudioPlayer.SetPosition(slider.Value);
+            NAudioPlayer.WaveOutEvent.Play();
         }
 
         public void ValueChanged(object sender)
@@ -486,7 +492,6 @@ namespace Harmony.ViewModel.App
 
         #endregion
 
-
         #region Event Methods
 
         /// <summary>
@@ -499,33 +504,6 @@ namespace Harmony.ViewModel.App
             AudioPosition = NAudioPlayer.GetPosition();
             AudioPositionInSeconds = NAudioPlayer.GetPositionInSeconds();
             AudioRemaining = NAudioPlayer.GetRemaining();
-
-            if (AudioLength == AudioPosition)
-            {
-                SavePlayCount();
-
-                // if playlist is not null play next
-                if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
-                {
-                    if (RepeatType == RepeatType.RepeatOnce)
-                    {
-                        NAudioPlayer.SetPosition(0);
-                        NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume);
-                    }
-                    else
-                    {
-                        PlayTrackItem(GetNextTrackItem(PlaylistTrackItems, SelectedTrackItem));
-                    }
-                }
-                else if (SelectedTrackItem != null)
-                {
-                    if (RepeatType == RepeatType.RepeatOnce)
-                    {
-                        NAudioPlayer.SetPosition(0);
-                        NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume);
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -533,12 +511,16 @@ namespace Harmony.ViewModel.App
         /// </summary>
         private void NAudioPlayer_PlaybackStopped()
         {
+            SavePlayCount();
+
             // if playlist is not null play next
             if (PlaylistTrackItems != null && PlaylistTrackItems.Count() > 0)
             {
                 if (RepeatType == RepeatType.RepeatOnce)
                 {
-                    StartPlayback(null);
+                    //NAudioPlayer.SetPosition(0);
+                    //NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume);
+                    NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume, SelectedTrackItem.Track.FileLocation);
                 }
                 else
                 {
@@ -549,7 +531,8 @@ namespace Harmony.ViewModel.App
             {
                 if (RepeatType == RepeatType.RepeatOnce)
                 {
-                    StartPlayback(null);
+                    //NAudioPlayer.SetPosition(0);
+                    NAudioPlayer.Play(NAudio.Wave.PlaybackState.Stopped, CurrentVolume, SelectedTrackItem.Track.FileLocation);
                 }
             }
         }

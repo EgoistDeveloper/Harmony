@@ -12,5 +12,7 @@ namespace Harmony.Models.Playlist
         public long DailyMixId { get; set; }
         [Required]
         public long TrackId { get; set; }
+
+        public DailyMix DailyMix { get; set; }
     }
 }

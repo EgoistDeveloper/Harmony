@@ -1,10 +1,5 @@
 ﻿using Harmony.Data;
 using Harmony.Models.Playlist;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Harmony.ViewModel.Playlist
@@ -14,8 +9,8 @@ namespace Harmony.ViewModel.Playlist
         public AddPlaylistGroupViewModel(Window window, PlaylistGroup playlistGroup = null) : base(window)
         {
             mWindow = window;
-            WindowMinimumHeight = 600;
-            WindowMinimumWidth = 800;
+            WindowMinimumHeight = 350;
+            WindowMinimumWidth = 500;
 
             PlaylistGroup = playlistGroup ?? new PlaylistGroup();
 

@@ -43,18 +43,20 @@
     
     <!-- Album Item DataTemplate -->
     <DataTemplate x:Key="AlbumItemDataTemplate">
-        <Grid>
+        <Grid Width="250">
             <Grid.RowDefinitions>
                 <RowDefinition Height="250"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <!-- Album Image -->
-            <Button Style="{StaticResource ContentButtonStyle}"
+            <Button x:Name="Button" 
+                    Style="{StaticResource ContentButtonStyle}"
                     Command="{Binding DataContext.GoToAlbumCommand, 
                               RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
                     Cursor="Hand"
-                    Height="350" Width="250">
+                    Height="250" Width="250"
+                    ToolTip="Go To Album">
                 <Button.Content>
                     <Border>
                         <Border.Effect>
@@ -70,17 +72,61 @@
 
             <!-- Album Title -->
             <TextBlock Grid.Row="1" 
-                       Margin="20 10 20 0"
+                       Margin="20 0 20 0"
                        Text="{Binding Album.Title}"
                        TextAlignment="Center"
                        TextWrapping="Wrap"
                        FontWeight="Bold"/>
+
+            <!-- Icon -->
+            <Border x:Name="Icon" 
+                    Height="45" Width="45" 
+                    CornerRadius="25"
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource BlueGrey100Brush}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Opacity="0">
+                <Path Height="20" Width="20" 
+                      Stretch="Uniform"
+                      Fill="{StaticResource WhiteBrush}"
+                      Data="{Binding Source={StaticResource PlaylistMusicOutline}, Path=Data}"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"/>
+            </Border>
         </Grid>
+        <DataTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" TargetName="Button" Value=".9"/>
+                <Setter Property="Opacity" TargetName="Icon" Value="1"/>
+            </Trigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
+
+    <!-- Track Item Template ContextMenu -->
+    <ContextMenu x:Key="TrackItemContextMenu">
+        <MenuItem Header="Remove Playlist Group"
+                  Command="{Binding DataContext.RemovePlaylistGroupCommand, 
+                            RelativeSource={RelativeSource Mode=FindAncestor, 
+                            AncestorType={x:Type ContextMenu}}}" 
+                  CommandParameter="{Binding Path=PlacementTarget, 
+                                     RelativeSource={RelativeSource Mode=FindAncestor, 
+                                     AncestorType={x:Type ContextMenu}}}"
+                  FontSize="14"
+                  ToolTip="Remove this playlist group">
+            <MenuItem.Icon>
+                <Path Height="13" Width="13" Stretch="Uniform"
+                      Fill="{StaticResource Amber600Brush}"
+                      Data="{Binding Source={StaticResource TrashCanOutline}, Path=Data}"
+                      VerticalAlignment="Center"/>
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
 
     <!-- TrackItem DataTemplate -->
     <DataTemplate x:Key="TrackItemDataTemplate">
-        <Border Background="{StaticResource BlueGrey900Brush}">
+        <Border Background="{StaticResource BlueGrey900Brush}"
+                ContextMenu="{StaticResource TrackItemContextMenu}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -106,13 +152,14 @@
 
     <!-- Artist DataTemplate -->
     <DataTemplate x:Key="ArtistDataTemplate">
-        <Grid Margin="0 10">
+        <Grid Margin="0 10" Width="250">
             <Grid.RowDefinitions>
                 <RowDefinition Height="250"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <!-- Album Image -->
-            <Button Style="{StaticResource ContentButtonStyle}"
+            <!-- Artist Image -->
+            <Button x:Name="Button" 
+                    Style="{StaticResource ContentButtonStyle}"
                     Command="{Binding DataContext.GoToArtistCommand, 
                               RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type pages:BasePage}}}"
                     CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"
@@ -131,14 +178,37 @@
                 </Button.Content>
             </Button>
 
-            <!-- Album Title -->
+            <!-- Artist Title -->
             <TextBlock Grid.Row="1" 
                        Margin="20 5 20 0"
                        Text="{Binding Artist.FullName}"
                        TextAlignment="Center"
                        TextWrapping="Wrap"
                        FontWeight="Bold"/>
+            
+            <!-- Icon -->
+            <Border x:Name="Icon" 
+                    Height="45" Width="45" 
+                    CornerRadius="25"
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource BlueGrey100Brush}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Opacity="0">
+                <Path Height="20" Width="20" 
+                      Stretch="Uniform"
+                      Fill="{StaticResource WhiteBrush}"
+                      Data="{Binding Source={StaticResource PlaylistMusicOutline}, Path=Data}"
+                      VerticalAlignment="Center"
+                      HorizontalAlignment="Center"/>
+            </Border>
         </Grid>
+        <DataTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" TargetName="Button" Value=".9"/>
+                <Setter Property="Opacity" TargetName="Icon" Value="1"/>
+            </Trigger>
+        </DataTemplate.Triggers>
     </DataTemplate>
     
     

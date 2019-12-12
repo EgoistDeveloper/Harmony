@@ -81,7 +81,8 @@
                             Padding="20 0"
                             Background="{StaticResource BlueGrey900Brush}"
                             Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView}}, Path=ActualWidth,
-                                    Converter={StaticResource IntMinusConverter}, ConverterParameter=10}">
+                                    Converter={StaticResource IntMinusConverter}, ConverterParameter=10}"
+                            ContextMenu="{StaticResource TrackItemContextMenu}">
                         <Grid VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="30"/>

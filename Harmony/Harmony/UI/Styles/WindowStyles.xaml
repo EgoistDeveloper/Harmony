@@ -11,7 +11,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Margin" Value="2" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
-        <Setter Property="Foreground" Value="{StaticResource BluePurpleGradientBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource Amber500Brush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -32,7 +32,7 @@
 
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource Blue50Brush}" />
+                <Setter Property="Foreground" Value="{StaticResource Amber800Brush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -41,8 +41,7 @@
     <Style TargetType="{x:Type Button}" x:Key="WindowCloseButton" BasedOn="{StaticResource WindowControlButton}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{StaticResource Red50Brush}" />
-                <Setter Property="Foreground" Value="{StaticResource BlueGrey600Brush}" />
+                <Setter Property="Foreground" Value="{StaticResource Red300Brush}" />
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -79,7 +78,7 @@
         <Setter Property="Background" Value="{StaticResource BlueGrey800Brush}"/>
         <Setter Property="Height" Value="850"/>
         <Setter Property="Width" Value="1435"/>
-        <Setter Property="Title" Value="Life Log"/>
+        <Setter Property="Title" Value="Harmony"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">

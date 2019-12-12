@@ -23,6 +23,6 @@
     </WindowChrome.WindowChrome>
 
     <Grid>
-        <TextBox Text="{Binding PlaylistGroup.Title}" Tag="Playlist Group Titme"/>
+        <TextBox Text="{Binding PlaylistGroup.Title}" Tag="Playlist Group Title"/>
     </Grid>
 </dialog:DialogWindow>

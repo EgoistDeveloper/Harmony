@@ -72,7 +72,9 @@ namespace Harmony.ViewModel.Track
             .Select(track => new TrackItem
             {
                 Track = track,
-            }).ToObservableCollection();
+            })
+            .OrderBy(x => x.Track.Title)
+            .ToObservableCollection();
 
             for (int i = 0; i < albumItem.TrackItems.Count; i++)
             {

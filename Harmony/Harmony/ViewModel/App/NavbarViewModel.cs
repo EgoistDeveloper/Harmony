@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using GalaSoft.MvvmLight;
 using Harmony.Data;
+using Harmony.Dialogs;
 using Harmony.Dialogs.Playlist;
 using Harmony.Helpers;
 using Harmony.Models.Common;
@@ -58,8 +59,8 @@ namespace Harmony.ViewModel.App
 
             GoToCommand = new RelayParameterizedCommand(GoTo);
             AddPlaylistGroupCommand = new RelayCommand(p => AddPlaylistGroup());
-
             GoToPlaylistCommand = new RelayParameterizedCommand(GoToPlaylist);
+
             LoadPlaylistGroups();
         }
 
@@ -94,9 +95,13 @@ namespace Harmony.ViewModel.App
             PlaylistGroupItems = db.PlaylistGroups.Select(x => new PlaylistGroupItem
             {
                 PlaylistGroup = x,
-                Playlists = db.Playlists.Where(c => c.PlaylistGroupId == x.Id).ToObservableCollection(),
+                Playlists = db.Playlists.Where(c => c.PlaylistGroupId == x.Id)
+                .OrderBy(x => x.Title)
+                .ToObservableCollection(),
+
                 AddPlayListCommand = new RelayParameterizedCommand(AddPlayList),
-                PlaylistGroupItemExpandedCommand = new RelayParameterizedCommand(PlaylistGroupItemExpanded)
+                PlaylistGroupItemExpandedCommand = new RelayParameterizedCommand(PlaylistGroupItemExpanded),
+                RemovePlaylistGroupCommand = new RelayParameterizedCommand(RemovePlaylistGroup)
             }).ToObservableCollection();
         }
 
@@ -144,6 +149,10 @@ namespace Harmony.ViewModel.App
             dialog.ShowDialogWindow(new AddPlaylistGroupViewModel(dialog));
         }
 
+        /// <summary>
+        /// Add playlist
+        /// </summary>
+        /// <param name="sender"></param>
         public void AddPlayList(object sender)
         {
             var playlistGroupItem = (sender as Button).DataContext as PlaylistGroupItem;
@@ -171,6 +180,10 @@ namespace Harmony.ViewModel.App
             dialog.ShowDialogWindow(new AddPlaylistViewModel(dialog, playlistGroupItem.PlaylistGroup));
         }
 
+        /// <summary>
+        /// Playlist group expanded
+        /// </summary>
+        /// <param name="sender"></param>
         public void PlaylistGroupItemExpanded(object sender)
         {
             var values = (object[])sender;
@@ -189,6 +202,10 @@ namespace Harmony.ViewModel.App
             }
         }
 
+        /// <summary>
+        /// Go To Playlist
+        /// </summary>
+        /// <param name="sender"></param>
         public void GoToPlaylist(object sender)
         {
             var playlist = ((Button)sender).DataContext as Models.Playlist.Playlist;
@@ -210,6 +227,32 @@ namespace Harmony.ViewModel.App
             }
 
             ViewModelApplication.GoToPage(ApplicationPage.Playlist);
+        }
+
+        /// <summary>
+        /// Remove playlist group
+        /// </summary>
+        /// <param name="sender"></param>
+        public void RemovePlaylistGroup(object sender)
+        {
+            var playlistGroupItem = (sender as Expander).DataContext as PlaylistGroupItem;
+
+            var dialog = new DeleteDialog();
+
+            dialog.Closing += (sender, args) =>
+            {
+                if (dialog.DataContext is DeleteDialogViewModel vm && vm.Result)
+                {
+                    using var db = new AppDbContext();
+
+                    db.PlaylistGroups.Remove(playlistGroupItem.PlaylistGroup);
+                    db.SaveChanges();
+
+                    PlaylistGroupItems.Remove(playlistGroupItem);
+                }
+            };
+
+            dialog.ShowDialogWindow(new DeleteDialogViewModel(dialog, "Remove Playlist Group", $"{playlistGroupItem.PlaylistGroup.Title} (included playlists)"));
         }
 
         #endregion

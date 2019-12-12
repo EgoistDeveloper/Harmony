@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:locator="clr-namespace:Harmony.ViewModel.Base"
              mc:Ignorable="d" 
              d:DesignHeight="1009" d:DesignWidth="350"
              DataContext="{Binding NavbarVM, Source={StaticResource Locator}}">
@@ -53,14 +54,32 @@
                                   Tag="PLAYLISTS"/>
                     </Grid>
 
-                    <!-- Add Playlist Gro -->
-                    <Button Grid.Row="2" 
-                            Height="40"
-                            Padding="20 10"
-                            Width="200"
-                            Content="ADD PLAYLIST GROUP"
-                            Tag="{Binding Source={StaticResource Plus}, Path=Data}"
-                            Command="{Binding AddPlaylistGroupCommand}"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Add Playlist Gro -->
+                        <Button Height="40"
+                                Padding="20 10"
+                                Width="200"
+                                Content="ADD PLAYLIST GROUP"
+                                Tag="{Binding Source={StaticResource Plus}, Path=Data}"
+                                Command="{Binding AddPlaylistGroupCommand}"/>
+
+
+                        <Button Grid.Column="1" Margin="15 0"
+                                Style="{StaticResource ContentButtonStyle}"
+                                Command="{Binding ApplicationViewModel.GoToImporterCommand,
+                                          Source={x:Static locator:ViewModelLocator.Instance}}"
+                                ToolTip="Go To Importer Page">
+                            <Button.Content>
+                                <Path Fill="{StaticResource Amber700Brush}"
+                                      Data="{Binding Source={StaticResource ProgressDownload}, Path=Data}"/>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
                 </Grid>
             </Border>
         </ControlTemplate>

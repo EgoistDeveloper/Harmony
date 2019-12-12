@@ -19,7 +19,7 @@
                   Style="{StaticResource LeftTitledListView}"
                   ItemTemplate="{StaticResource LibraryItemDataTemplate}"
                   ScrollViewer.VerticalScrollBarVisibility="Auto"
-                  VerticalAlignment="Stretch"
+                  VerticalAlignment="Top"
                   Tag="LIBRARIES"/>
 
         <Grid Grid.Row="1">

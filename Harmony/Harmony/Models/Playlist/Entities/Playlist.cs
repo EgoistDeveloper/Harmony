@@ -9,6 +9,11 @@ namespace Harmony.Models.Playlist
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public Playlist()
+        {
+            AddedDate = DateTime.Now;
+        }
+
         public long Id { get; set; }
         [Required]
         public DateTime AddedDate { get; set; }
@@ -17,5 +22,7 @@ namespace Harmony.Models.Playlist
         public string Description { get; set; }
         public BitmapImage Image { get; set; }
         public long PlaylistGroupId { get; set; }
+
+        public PlaylistGroup PlaylistGroup { get; set; }
     }
 }

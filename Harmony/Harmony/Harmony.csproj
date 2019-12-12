@@ -164,6 +164,7 @@
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="PropertyChanged, Version=3.1.3.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
       <HintPath>..\packages\PropertyChanged.Fody.3.1.3\lib\net40\PropertyChanged.dll</HintPath>
     </Reference>
@@ -273,9 +274,9 @@
     <Compile Include="Helpers\ToObservableCollection.cs" />
     <Compile Include="Helpers\WindowEffect.cs" />
     <Compile Include="Helpers\WindowResizer.cs" />
-    <Compile Include="Migrations\20191206122719_First.cs" />
-    <Compile Include="Migrations\20191206122719_First.designer.cs">
-      <DependentUpon>20191206122719_First.cs</DependentUpon>
+    <Compile Include="Migrations\20191212120716_First.cs" />
+    <Compile Include="Migrations\20191212120716_First.designer.cs">
+      <DependentUpon>20191212120716_First.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Models\AppSetting\Entities\AppSetting.cs" />
@@ -523,6 +524,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Styles\ButtonStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Styles\ComboBoxStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Styles\ContextMenuStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

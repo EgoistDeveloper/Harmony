@@ -5,21 +5,26 @@
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="HasDropShadow" Value="True"/>
         <Setter Property="Foreground" Value="{StaticResource BlueGrey100Brush}"/>
+        <Setter Property="MinHeight" Value="25"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToolTip">
-                    <Grid>
-                        <Border Name="Border"
-                                Width="{TemplateBinding Width}"
-                                Height="{TemplateBinding Height}"
-                                Opacity=".95"
-                                Padding="3"
-                                CornerRadius="5"
-                                Background="{StaticResource SnowWhiteBrush}"/>
+                    <Border Name="Border"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}"
+                            Opacity=".95"
+                            Padding="5"
+                            Margin="10"
+                            Background="{StaticResource BlueGrey800Brush}"
+                            BorderThickness="1"
+                            BorderBrush="{StaticResource BlueGrey900Brush}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="5" Color="{StaticResource BlueGrey100}" Opacity=".3" ShadowDepth="0" Direction="0"/>
+                        </Border.Effect>
                         <ContentPresenter Margin="3"
                                           HorizontalAlignment="Left"
                                           VerticalAlignment="Top" />
-                    </Grid>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasDropShadow" Value="true">
                             <Setter TargetName="Border" Property="SnapsToDevicePixels" Value="true" />

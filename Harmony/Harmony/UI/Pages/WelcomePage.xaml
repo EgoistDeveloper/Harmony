@@ -7,7 +7,7 @@
       xmlns:local="clr-namespace:Harmony.UI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      DataContext="{Binding DiaryLogVM, Source={StaticResource Locator}}">
+      DataContext="{Binding ApplicationViewModel, Source={StaticResource Locator}}">
 
     <Grid>
         <TextBlock Text="Welcome Hermanos"/>

@@ -3,12 +3,8 @@ using Harmony.Data;
 using Harmony.Helpers;
 using Harmony.Models.Track;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -45,6 +41,9 @@ namespace Harmony.ViewModel.Track
 
         #region Methods
 
+        /// <summary>
+        /// Load tracks
+        /// </summary>
         public void LoadTrackItems()
         {
             using var db = new AppDbContext();
@@ -59,6 +58,7 @@ namespace Harmony.ViewModel.Track
             {
                 Track = track,
             })
+            .OrderBy(x => x.Track.Title)
             .Skip((CurrentPage - 1) * PageLimit)
             .Take(PageLimit)
             .ToObservableCollection();
@@ -68,19 +68,26 @@ namespace Harmony.ViewModel.Track
 
         #region Command Methods
 
+        /// <summary>
+        /// Go to page
+        /// </summary>
+        /// <param name="sender"></param>
         public void GoToListPage(object sender)
         {
             CurrentPage = (int)(sender as Button).DataContext;
             LoadTrackItems();
         }
 
+        /// <summary>
+        /// Search term changed
+        /// </summary>
+        /// <param name="sender"></param>
         public void SearchChanged(object sender)
         {
             SearchTerm = (sender as TextBox).Text;
             CurrentPage = 1;
             LoadTrackItems();
         }
-
 
         #endregion
     }

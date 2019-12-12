@@ -53,7 +53,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    
+
                     <TextBlock Text="{Binding ApplicationViewModel.CurrentPage, 
                                        Converter={StaticResource EnumToStringConverter},
                                        Source={x:Static locator:ViewModelLocator.Instance}, 
@@ -69,15 +69,6 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Bottom"/>
                 </Grid>
-
-
-                <Button Grid.Column="1"
-                        Margin="15 0"
-                        VerticalAlignment="Bottom"
-                        Tag="{Binding Source={StaticResource ProgressDownload}, Path=Data}"
-                        Style="{StaticResource Icon2xButtonStyle}"
-                        Command="{Binding ApplicationViewModel.GoToImporterCommand,
-                                  Source={x:Static locator:ViewModelLocator.Instance}}"/>
             </Grid>
 
             <pages:PageHost Grid.Row="1" 

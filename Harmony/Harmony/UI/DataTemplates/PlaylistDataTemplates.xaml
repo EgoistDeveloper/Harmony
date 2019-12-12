@@ -17,13 +17,34 @@
                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=Self}}"/>
     </DataTemplate>
 
+    <!-- Playlist Group Item Template ContextMenu -->
+    <ContextMenu x:Key="PlaylistGroupItemContextMenu">
+        <MenuItem Header="Remove Playlist Group"
+                  Command="{Binding DataContext.RemovePlaylistGroupCommand, 
+                            RelativeSource={RelativeSource Mode=FindAncestor, 
+                            AncestorType={x:Type ContextMenu}}}" 
+                  CommandParameter="{Binding Path=PlacementTarget, 
+                                     RelativeSource={RelativeSource Mode=FindAncestor, 
+                                     AncestorType={x:Type ContextMenu}}}"
+                  FontSize="14"
+                  ToolTip="Remove this playlist group">
+            <MenuItem.Icon>
+                <Path Height="13" Width="13" Stretch="Uniform"
+                      Fill="{StaticResource Amber600Brush}"
+                      Data="{Binding Source={StaticResource TrashCanOutline}, Path=Data}"
+                      VerticalAlignment="Center"/>
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
+
     <!-- Playlist Group Item Template -->
     <DataTemplate x:Key="PlaylistGroupItemTemplate">
         <Expander Width="250" 
                   Margin="10 0 0 0"
                   Header="{Binding PlaylistGroup.Title, FallbackValue='Playlist Group Title'}"
                   IsExpanded="{Binding IsExpanded}"
-                  Style="{StaticResource ListItemExpanderStyle}">
+                  Style="{StaticResource ListItemExpanderStyle}"
+                  ContextMenu="{StaticResource PlaylistGroupItemContextMenu}">
             <ListView ItemTemplate="{StaticResource PlaylistItemTemplate}" 
                       ItemsSource="{Binding Playlists}"
                       Tag="There is no playlist"/>
@@ -118,5 +139,7 @@
             </Grid>
         </Border>
     </DataTemplate>
+
+
 
 </ResourceDictionary>

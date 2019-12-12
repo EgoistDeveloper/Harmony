@@ -1,25 +1,17 @@
 ﻿using GalaSoft.MvvmLight;
 using Harmony.Data;
-using Harmony.Dialogs;
 using Harmony.Helpers;
 using Harmony.Models.Player;
 using Harmony.Models.Track;
-using Harmony.ViewModel.App;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
-using static Harmony.DI.DI;
 
 namespace Harmony.ViewModel.Player
 {
@@ -29,6 +21,8 @@ namespace Harmony.ViewModel.Player
         {
             ImportFolderCommand = new RelayCommand(p => ImportFolder());
             OpenFolderCommand = new RelayParameterizedCommand(OpenFolder);
+            ReScanFolderCommand = new RelayParameterizedCommand(ReScanFolder);
+
             LoadLibraries();
         }
 
@@ -50,6 +44,9 @@ namespace Harmony.ViewModel.Player
 
         #region Methods
 
+        /// <summary>
+        /// Load libraries from db
+        /// </summary>
         public void LoadLibraries()
         {
             using var db = new AppDbContext();
@@ -62,6 +59,11 @@ namespace Harmony.ViewModel.Player
             }).ToObservableCollection();
         }
 
+        /// <summary>
+        /// Scan folder with target file formats
+        /// </summary>
+        /// <param name="baseDirectory"></param>
+        /// <returns></returns>
         public IEnumerable<string> ScanFolder(string baseDirectory)
         {
             return Directory.EnumerateFiles(baseDirectory, "*.*", SearchOption.AllDirectories)
@@ -74,6 +76,10 @@ namespace Harmony.ViewModel.Player
                 || x.EndsWith(".mp4") || x.EndsWith(".wav") || x.EndsWith(".m4a"));
         }
 
+        /// <summary>
+        /// Add artists
+        /// </summary>
+        /// <param name="artists"></param>
         public void AddArtists(string[] artists)
         {
             using var db = new AppDbContext();
@@ -91,6 +97,12 @@ namespace Harmony.ViewModel.Player
 
             db.SaveChanges();
         }
+
+        /// <summary>
+        /// Add album artists
+        /// </summary>
+        /// <param name="artists"></param>
+        /// <param name="albumId"></param>
         public void AddAlbumArtists(string[] artists, long albumId)
         {
             using var db = new AppDbContext();
@@ -112,11 +124,17 @@ namespace Harmony.ViewModel.Player
             db.SaveChanges();
         }
 
-        public void ProcessFiles(IEnumerable<string> files)
+        /// <summary>
+        /// Import files to db
+        /// </summary>
+        /// <param name="files"></param>
+        public void ImportFiles(IEnumerable<string> files)
         {
             if (files.Count() > 0)
             {
                 ProcessOutput = "Importing audio files...";
+
+                var importedFiles = 0;
 
                 new Thread(() =>
                 {
@@ -149,7 +167,6 @@ namespace Harmony.ViewModel.Player
                                     };
 
                                     artists = tfile.Tag.Artists;
-                                    //AddArtists(tfile.Tag.Artists);
                                 }
                                 else if (tfile.Tag.AlbumArtists.Length > 0)
                                 {
@@ -160,7 +177,6 @@ namespace Harmony.ViewModel.Player
                                     };
 
                                     artists = tfile.Tag.AlbumArtists;
-                                    //AddArtists(tfile.Tag.AlbumArtists);
                                 }
 
                                 if (artist.Id <= 0)
@@ -210,23 +226,18 @@ namespace Harmony.ViewModel.Player
                                 AlbumId = album.Id
                             };
 
-                            //if (tfile.Tag.Pictures.Length > 0)
-                            //{
-                            //    //track.Image = tfile.Tag.Pictures[0].Filename.PathToBitmapImage();
-                            //    track.Image = tfile.Tag.Pictures[0]?.Data.Data.ByteArrayToBitmapImage();
-                            //}
-
                             // add new track
                             db.Tracks.Add(track);
                             db.SaveChanges();
+
+                            importedFiles += 1;
                         }
                     }
 
                     // todo: may you need run in foreach
                     db.SaveChanges();
 
-                    ProcessOutput = $"Process is done. Added {files.Count()} files.";
-
+                    ProcessOutput = $"Process is done. Added {importedFiles} files.";
                 }).Start();
             }
             else
@@ -239,6 +250,10 @@ namespace Harmony.ViewModel.Player
 
         #region Command Methods
 
+        /// <summary>
+        /// Open selected folder
+        /// </summary>
+        /// <param name="sender"></param>
         public void OpenFolder(object sender)
         {
             var libraryItem = (sender as System.Windows.Controls.Button).DataContext as LibraryItem;            
@@ -246,6 +261,9 @@ namespace Harmony.ViewModel.Player
             Process.Start(libraryItem.Library.FolderPath);
         }
 
+        /// <summary>
+        /// Import selected folder
+        /// </summary>
         public void ImportFolder()
         {
             ProcessOutput = "Selecting library folder...";
@@ -259,29 +277,46 @@ namespace Harmony.ViewModel.Player
             var result = folderBrowserDialog.ShowDialog();
             if (result == DialogResult.OK && !string.IsNullOrEmpty(folderBrowserDialog.SelectedPath))
             {
-                var files = ScanFolder(folderBrowserDialog.SelectedPath);
-
-                ProcessFiles(files);
+                using var db = new AppDbContext();
 
                 var library = new Library
                 {
                     FolderPath = folderBrowserDialog.SelectedPath
                 };
 
-                using var db = new AppDbContext();
-                db.Libraries.Add(library);
-                db.SaveChanges();
+                if (!db.Libraries.Any(x => x.FolderPath == folderBrowserDialog.SelectedPath))
+                {
+                    db.Libraries.Add(library);
+                    db.SaveChanges();
 
-                LibraryItems.Add(new LibraryItem 
-                { 
-                    Library = library,
-                    DirectoryInfo = new DirectoryInfo(folderBrowserDialog.SelectedPath)
-                });
+                    LibraryItems.Add(new LibraryItem
+                    {
+                        Library = library,
+                        DirectoryInfo = new DirectoryInfo(folderBrowserDialog.SelectedPath)
+                    });
+                }
+
+                var files = ScanFolder(folderBrowserDialog.SelectedPath);
+
+                ImportFiles(files);
             }
             else
             {
                 ProcessOutput = "Selecting failed or canceled";
             }
+        }
+
+        /// <summary>
+        /// Recan and import selected folder
+        /// </summary>
+        /// <param name="sender"></param>
+        public void ReScanFolder(object sender)
+        {
+            var libraryItem = ((System.Windows.Controls.Button)sender).DataContext as LibraryItem;
+
+            var files = ScanFolder(libraryItem.Library.FolderPath);
+
+            ImportFiles(files);
         }
 
         #endregion

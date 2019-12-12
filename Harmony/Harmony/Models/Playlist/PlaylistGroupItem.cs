@@ -15,6 +15,7 @@ namespace Harmony.Models.Playlist
 
         public ICommand AddPlayListCommand { get; set; }
         public ICommand PlaylistGroupItemExpandedCommand { get; set; }
+        public ICommand RemovePlaylistGroupCommand { get; set; }
 
         public bool IsExpanded { get; set; }
         public PlaylistGroup PlaylistGroup { get; set; }
